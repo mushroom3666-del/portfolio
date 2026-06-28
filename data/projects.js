@@ -10,7 +10,7 @@ const projects = [
     img: W + '658dc8_200c08d35d5142d4a2ea9855b5eaff33~mv2.jpg',
     desc: "A music video for KAMI's track RENDEZVOUS. Add your description of this project here — the brief, your approach, and what made it memorable to work on.",
     featured: true,
-    video: 'https://www.youtube.com/embed/dpZlPUQcjx0',
+    video: 'https://www.youtube.com/embed/30rmjEl2Hus',
     images: [
       W + '658dc8_e87df1115d4645a8a57913250e1d0eba~mv2.jpg',
       W + '658dc8_a4f994f080b04ed5ae20c0ad4777ebe1~mv2.jpg',
@@ -119,7 +119,7 @@ const projects = [
     img: W + '658dc8_df1c1c0d27484a1dbbe68c53b9439505~mv2.jpg',
     desc: "A music video for Strayfold's Heartstrings. Add your description here.",
     featured: true,
-    video: 'https://www.youtube.com/embed/cKHotWEsRY4',
+    video: 'https://www.youtube.com/embed/9vXWg8ZEEd8',
     images: [
       W + '658dc8_300e31e6c9a741c8ab7158d38d701ee9~mv2.png',
       W + '658dc8_1c4306835a844dbbad78be9a6eedb417~mv2.png',
@@ -162,6 +162,7 @@ const projects = [
     desc: 'A reality web series. Add your description here.',
     featured: false,
     video: null,
+    link: 'https://www.youtube.com/@tablefortwo-t42',
     images: [],
   },
   {

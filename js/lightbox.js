@@ -75,6 +75,14 @@ function openLightbox(el) {
   document.getElementById('lbDesc').textContent = el.dataset.desc;
   document.getElementById('lbYear').textContent = el.dataset.year;
   document.getElementById('lbRole').textContent = el.dataset.role;
+  const lbLink = document.getElementById('lbLink');
+  if (project.link) {
+    lbLink.href = project.link;
+    lbLink.textContent = 'Visit Channel →';
+    lbLink.style.display = '';
+  } else {
+    lbLink.style.display = 'none';
+  }
   document.getElementById('lightboxOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(() => goToSlide(0));
