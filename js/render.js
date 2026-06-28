@@ -9,6 +9,7 @@ function attrs(p) {
 function renderFeatured() {
   document.getElementById('portfolioGrid').innerHTML = projects
     .filter(p => p.featured)
+    .slice(0, 6)
     .map(p => `
       <div class="work-item" ${attrs(p)}>
         <div class="work-thumb">
