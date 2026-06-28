@@ -323,6 +323,7 @@ function goToSlide(index) {
   const peekPx = (carouselEl.offsetWidth - slideWidth) / 2;
   track.style.transform = `translateX(${peekPx - index * (slideWidth + gapPx)}px)`;
 
+  Array.from(track.children).forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
   document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
     dot.classList.toggle('active', i === currentSlide);
   });
