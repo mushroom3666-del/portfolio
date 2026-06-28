@@ -78,7 +78,7 @@ function openLightbox(el) {
   const lbLink = document.getElementById('lbLink');
   if (project.link) {
     lbLink.href = project.link;
-    lbLink.textContent = 'Visit Channel →';
+    lbLink.textContent = project.linkLabel || 'View →';
     lbLink.style.display = '';
   } else {
     lbLink.style.display = 'none';
