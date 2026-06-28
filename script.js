@@ -312,10 +312,17 @@ let totalSlides = 0;
 
 function goToSlide(index) {
   const track = document.getElementById('carouselTrack');
+  const carouselEl = document.getElementById('lightboxCarousel');
   if (index < 0) index = totalSlides - 1;
   if (index >= totalSlides) index = 0;
   currentSlide = index;
-  track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+  const firstSlide = track.firstElementChild;
+  const slideWidth = firstSlide ? firstSlide.offsetWidth : (carouselEl.offsetWidth - 96);
+  const gapPx = parseInt(getComputedStyle(track).gap) || 16;
+  const peekPx = (carouselEl.offsetWidth - slideWidth) / 2;
+  track.style.transform = `translateX(${peekPx - index * (slideWidth + gapPx)}px)`;
+
   document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
     dot.classList.toggle('active', i === currentSlide);
   });
@@ -366,8 +373,6 @@ function openLightbox(el) {
   }
 
   totalSlides = slides.length;
-  currentSlide = 0;
-  track.style.transform = 'translateX(0)';
 
   dots.innerHTML = slides.map((_, i) =>
     `<div class="carousel-dot${i === 0 ? ' active' : ''}" data-index="${i}"></div>`
@@ -385,6 +390,8 @@ function openLightbox(el) {
   document.getElementById('lbRole').textContent = el.dataset.role;
   document.getElementById('lightboxOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  // Defer so the overlay is laid out before reading offsetWidth
+  requestAnimationFrame(() => goToSlide(0));
 }
 
 document.getElementById('portfolioGrid').addEventListener('click', e => {
