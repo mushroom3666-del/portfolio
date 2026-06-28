@@ -2,6 +2,32 @@ const W = 'https://static.wixstatic.com/media/';
 
 const projects = [
   {
+    title: 'Ashes by KAMI',
+    category: 'Music Video',
+    cat: 'music-video',
+    year: 2025,
+    role: 'Director',
+    img: 'https://img.youtube.com/vi/qQ6seF6ueMc/maxresdefault.jpg',
+    desc: 'Ashes is a deeply intimate track about feeling suffocated and overpowered by narcissistic forces, particularly in what should be the comfort of your own space.',
+    featured: true,
+    video: 'https://www.youtube.com/embed/qQ6seF6ueMc',
+    images: [],
+  },
+  {
+    title: 'Drunk Euphoria',
+    category: 'Music Video',
+    cat: 'music-video',
+    year: 2025,
+    role: 'Director, Co-Producer, Director of Photography, Editor',
+    img: 'https://img.youtube.com/vi/715q4toY9EM/maxresdefault.jpg',
+    desc: "For when you wanna feel nothing else but release, or when you haven't seen your inner child for a while. Drunk Euphoria explores facing the changes that come with growing up and how to cope with leaving your childhood behind when adult life gets monotonous. Maybe you'll find them at the bottom of the bottle?",
+    featured: true,
+    video: 'https://www.youtube.com/embed/715q4toY9EM',
+    link: 'https://www.youtube.com/watch?v=2SNaS8-oKnM',
+    linkLabel: 'Watch BTS →',
+    images: [],
+  },
+  {
     title: 'RENDEZVOUS by KAMI',
     category: 'Music Video',
     cat: 'music-video',
