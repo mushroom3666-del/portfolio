@@ -73,7 +73,7 @@ section { padding: 6rem 4rem; }
 #archive { display: none; padding: 0; }
 #archive.visible { display: block; }
 
-.archive-header { padding: 5rem 4rem 4rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }
+.archive-header { padding: 5rem 4rem 4rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }
 .archive-header-left p { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
 .archive-header-left h2 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 400; line-height: 1.0; }
 .archive-count { font-family: var(--font-display); font-size: 4rem; font-weight: 400; color: rgba(255,255,255,0.08); line-height: 1; }
@@ -85,7 +85,7 @@ section { padding: 6rem 4rem; }
 .view-btn.active { background: var(--bg3); color: var(--text); }
 
 /* GRID VIEW */
-.archive-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+.archive-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; padding: 4rem; }
 .archive-grid.hidden { display: none; }
 .grid-item { cursor: pointer; }
 .grid-item.filtered-out { display: none; }
