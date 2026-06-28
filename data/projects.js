@@ -5,7 +5,7 @@ const projects = [
     cat: 'music-video',
     year: 2025,
     role: 'Director, Co-Producer, Director of Photography, Editor',
-    img: 'images/drunk-euphoria/thumb.jpg',
+    img: 'images/drunk-euphoria/02.jpg',
     desc: "For when you wanna feel nothing else but release, or when you haven't seen your inner child for a while. Drunk Euphoria explores facing the changes that come with growing up and how to cope with leaving your childhood behind when adult life gets monotonous. Maybe you'll find them at the bottom of the bottle?",
     featured: true,
     video: 'https://www.youtube.com/embed/715q4toY9EM',
@@ -22,6 +22,7 @@ const projects = [
       'images/drunk-euphoria/08.jpg',
       'images/drunk-euphoria/09.jpg',
       'images/drunk-euphoria/10.jpg',
+      'images/drunk-euphoria/thumb.jpg',
     ],
   },
   {
