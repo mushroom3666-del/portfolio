@@ -30,7 +30,7 @@ const projects = [
     cat: 'music-video',
     year: 2025,
     role: 'Director',
-    img: 'images/ashes/01.jpg',
+    img: 'images/ashes/10.jpg',
     desc: 'Filmed all in one shot, Ashes is a deeply intimate track about feeling suffocated and overpowered by narcissistic forces, particularly in what should be the comfort of your own space.',
     featured: true,
     video: 'https://www.youtube.com/embed/qQ6seF6ueMc',
