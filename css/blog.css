@@ -220,7 +220,7 @@
   display: block;
   object-fit: cover;
 }
-.post-img-caption {
+.post-body .post-img-caption {
   font-size: 0.68rem;
   font-style: italic;
   letter-spacing: 0.04em;
