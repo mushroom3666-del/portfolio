@@ -17,4 +17,5 @@
   .archive-grid { grid-template-columns: repeat(2, 1fr); }
   .list-item { grid-template-columns: 70px 1fr; }
   .list-year, .list-arrow { display: none; }
+  .hero-video { object-fit: contain; object-position: center center; }
 }
