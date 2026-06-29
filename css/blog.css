@@ -162,6 +162,17 @@
   margin-bottom: 1.5rem;
 }
 
+.post-body ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.post-body ol li {
+  font-size: 0.97rem;
+  line-height: 1.9;
+  color: rgba(240,237,232,0.78);
+  margin-bottom: 0.4rem;
+}
+
 .post-body h2 {
   font-family: var(--font-display);
   font-size: clamp(1.4rem, 3vw, 2rem);
