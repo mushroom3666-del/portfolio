@@ -214,6 +214,7 @@
 }
 .post-img-caption {
   font-size: 0.62rem;
+  font-style: italic;
   letter-spacing: 0.08em;
   color: var(--muted);
   margin-top: 0.75rem;
