@@ -27,7 +27,7 @@ const projects = [
     ],
   },
   {
-    title: 'Drunk Euphoria',
+    title: 'Drunk Euphoria by KAMI',
     category: 'Music Video',
     cat: 'music-video',
     year: 2025,
