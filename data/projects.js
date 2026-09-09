@@ -31,7 +31,7 @@ const projects = [
     category: 'Music Video',
     cat: 'music-video',
     year: 2025,
-    role: 'Director, Co-Producer, Director of Photography, Editor',
+    role: 'Director/Co-Producer/Director of Photography/Editor',
     img: 'images/drunk-euphoria/02.jpg',
     desc: "For when you wanna feel nothing else but release, or when you haven't seen your inner child for a while. Drunk Euphoria explores facing the changes that come with growing up and how to cope with leaving your childhood behind when adult life gets monotonous. Maybe you'll find them at the bottom of the bottle?",
     featured: true,
