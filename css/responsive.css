@@ -12,7 +12,6 @@
 }
 @media (max-width: 600px) {
   .works-grid { grid-template-columns: 1fr; }
-  .about-stats { grid-template-columns: repeat(2, 1fr); }
   .nav-toggle { display: flex; }
   .nav-links {
     position: fixed; inset: 0; z-index: 100;
