@@ -1,6 +1,3 @@
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
-
 const archiveSection = document.getElementById('archive');
 const archiveToggleBtn = document.getElementById('archiveToggleBtn');
 archiveToggleBtn.addEventListener('click', () => {
