@@ -72,7 +72,7 @@
   <section id="screen-setup" class="screen">
     <h1>Set up admin access</h1>
     <p class="sub">This is the first time this browser has opened the admin page. Choose a passphrase — it's stored only on this device and never leaves your browser.</p>
-    <div class="card">
+    <form class="card" id="setupPassForm">
       <div class="field">
         <label for="setupPass">New passphrase</label>
         <input type="password" id="setupPass" autocomplete="new-password">
@@ -81,32 +81,32 @@
         <label for="setupPassConfirm">Confirm passphrase</label>
         <input type="password" id="setupPassConfirm" autocomplete="new-password">
       </div>
-      <button class="btn-primary" id="setupPassBtn">Save passphrase</button>
+      <button type="submit" class="btn-primary" id="setupPassBtn">Save passphrase</button>
       <div class="error" id="setupPassError"></div>
-    </div>
+    </form>
   </section>
 
   <!-- ═══ ENTER PASSPHRASE ═══ -->
   <section id="screen-lock" class="screen">
     <h1>Admin</h1>
     <p class="sub">Enter your passphrase to continue.</p>
-    <div class="card">
+    <form class="card" id="lockForm">
       <div class="field">
         <label for="lockPass">Passphrase</label>
         <input type="password" id="lockPass" autocomplete="current-password">
       </div>
-      <button class="btn-primary" id="lockBtn">Unlock</button>
+      <button type="submit" class="btn-primary" id="lockBtn">Unlock</button>
       <div class="error" id="lockError"></div>
       <div class="divider-lite"></div>
-      <button class="btn-ghost" id="forgetPassBtn">Forgot it / reset passphrase</button>
-    </div>
+      <button type="button" class="btn-ghost" id="forgetPassBtn">Forgot it / reset passphrase</button>
+    </form>
   </section>
 
   <!-- ═══ ENTER GITHUB TOKEN ═══ -->
   <section id="screen-token" class="screen">
     <h1>Connect to GitHub</h1>
     <p class="sub">This page saves new projects by committing directly to your site's repository. It needs a GitHub token with write access, generated once and stored only on this device.</p>
-    <div class="card">
+    <form class="card" id="tokenForm">
       <details style="margin-bottom: 1.5rem;">
         <summary>How to generate a token</summary>
         <div class="hint" style="margin-top: 0.75rem;">
@@ -121,9 +121,9 @@
         <label for="tokenInput">GitHub token</label>
         <input type="password" id="tokenInput" autocomplete="off" spellcheck="false">
       </div>
-      <button class="btn-primary" id="tokenBtn">Connect</button>
+      <button type="submit" class="btn-primary" id="tokenBtn">Connect</button>
       <div class="error" id="tokenError"></div>
-    </div>
+    </form>
   </section>
 
   <!-- ═══ MAIN APP ═══ -->
@@ -278,7 +278,8 @@ function initGate() {
   initTokenGate();
 }
 
-document.getElementById('setupPassBtn').addEventListener('click', async () => {
+document.getElementById('setupPassForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
   const p1 = document.getElementById('setupPass').value;
   const p2 = document.getElementById('setupPassConfirm').value;
   const err = document.getElementById('setupPassError');
@@ -290,7 +291,8 @@ document.getElementById('setupPassBtn').addEventListener('click', async () => {
   initTokenGate();
 });
 
-document.getElementById('lockBtn').addEventListener('click', async () => {
+document.getElementById('lockForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
   const val = document.getElementById('lockPass').value;
   const err = document.getElementById('lockError');
   const hash = await sha256Hex(val);
@@ -318,7 +320,8 @@ function initTokenGate() {
   connectWithToken(token, true);
 }
 
-document.getElementById('tokenBtn').addEventListener('click', async () => {
+document.getElementById('tokenForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
   const token = document.getElementById('tokenInput').value.trim();
   if (!token) return;
   connectWithToken(token, false);
