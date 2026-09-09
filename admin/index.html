@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Add Project</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+  body { padding: 3rem 1.5rem 6rem; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 2.5rem; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .card { background: var(--bg2); border: 1px solid var(--border); padding: 2rem; }
+  .field { margin-bottom: 1.25rem; }
+  .field label { display: block; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .field .hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; line-height: 1.5; }
+  input[type=text], input[type=password], input[type=number], input[type=url], textarea, select {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+    font-family: var(--font-body); font-size: 0.9rem; padding: 0.7rem 0.8rem; font-weight: 300;
+  }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+  input[type=file] { width: 100%; font-size: 0.8rem; color: var(--muted); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .checkbox-row { display: flex; align-items: center; gap: 0.6rem; }
+  .checkbox-row input { width: auto; }
+  .checkbox-row label { margin: 0; text-transform: none; letter-spacing: normal; font-size: 0.85rem; color: var(--text); }
+  button { font-family: var(--font-body); cursor: pointer; border: none; }
+  .btn-primary { background: var(--accent); color: #0a0a0a; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.85rem 1.6rem; font-weight: 500; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-ghost { background: none; color: var(--muted); font-size: 0.75rem; text-decoration: underline; padding: 0.4rem 0; }
+  .btn-ghost:hover { color: var(--text); }
+  .divider-lite { height: 1px; background: var(--border); margin: 2rem 0; }
+  .error { color: #e08a8a; font-size: 0.8rem; margin-top: 0.75rem; }
+  .success { color: var(--accent); font-size: 0.85rem; }
+  .log { background: var(--bg3); border: 1px solid var(--border); padding: 1rem; font-size: 0.78rem; color: var(--muted); font-family: monospace; white-space: pre-wrap; margin-top: 1.5rem; max-height: 240px; overflow-y: auto; }
+  .log:empty { display: none; }
+  .existing { margin-top: 1rem; font-size: 0.78rem; color: var(--muted); max-height: 140px; overflow-y: auto; border: 1px solid var(--border); padding: 0.75rem; }
+  .existing div { padding: 0.15rem 0; }
+  details summary { cursor: pointer; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .top-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+  .top-actions .btn-ghost { font-size: 0.7rem; }
+  fieldset { border: none; margin: 0; padding: 0; }
+  legend { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1rem; color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ═══ SET UP PASSPHRASE (first run) ═══ -->
+  <section id="screen-setup" class="screen">
+    <h1>Set up admin access</h1>
+    <p class="sub">This is the first time this browser has opened the admin page. Choose a passphrase — it's stored only on this device and never leaves your browser.</p>
+    <div class="card">
+      <div class="field">
+        <label for="setupPass">New passphrase</label>
+        <input type="password" id="setupPass" autocomplete="new-password">
+      </div>
+      <div class="field">
+        <label for="setupPassConfirm">Confirm passphrase</label>
+        <input type="password" id="setupPassConfirm" autocomplete="new-password">
+      </div>
+      <button class="btn-primary" id="setupPassBtn">Save passphrase</button>
+      <div class="error" id="setupPassError"></div>
+    </div>
+  </section>
+
+  <!-- ═══ ENTER PASSPHRASE ═══ -->
+  <section id="screen-lock" class="screen">
+    <h1>Admin</h1>
+    <p class="sub">Enter your passphrase to continue.</p>
+    <div class="card">
+      <div class="field">
+        <label for="lockPass">Passphrase</label>
+        <input type="password" id="lockPass" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" id="lockBtn">Unlock</button>
+      <div class="error" id="lockError"></div>
+      <div class="divider-lite"></div>
+      <button class="btn-ghost" id="forgetPassBtn">Forgot it / reset passphrase</button>
+    </div>
+  </section>
+
+  <!-- ═══ ENTER GITHUB TOKEN ═══ -->
+  <section id="screen-token" class="screen">
+    <h1>Connect to GitHub</h1>
+    <p class="sub">This page saves new projects by committing directly to your site's repository. It needs a GitHub token with write access, generated once and stored only on this device.</p>
+    <div class="card">
+      <details style="margin-bottom: 1.5rem;">
+        <summary>How to generate a token</summary>
+        <div class="hint" style="margin-top: 0.75rem;">
+          1. Go to <strong>github.com/settings/tokens?type=beta</strong> and click "Generate new token".<br>
+          2. Name it anything, e.g. "Portfolio Admin".<br>
+          3. Under "Repository access", choose "Only select repositories" and pick <strong>portfolio</strong>.<br>
+          4. Under "Permissions" → "Repository permissions", set <strong>Contents</strong> to "Read and write".<br>
+          5. Generate the token and paste it below. It will start with <code>github_pat_</code>.
+        </div>
+      </details>
+      <div class="field">
+        <label for="tokenInput">GitHub token</label>
+        <input type="password" id="tokenInput" autocomplete="off" spellcheck="false">
+      </div>
+      <button class="btn-primary" id="tokenBtn">Connect</button>
+      <div class="error" id="tokenError"></div>
+    </div>
+  </section>
+
+  <!-- ═══ MAIN APP ═══ -->
+  <section id="screen-app" class="screen">
+    <div class="top-actions">
+      <div>
+        <h1 style="margin-bottom:0.25rem;">Add a project</h1>
+        <p class="sub" style="margin-bottom:0;">Connected to <strong id="repoName"></strong></p>
+      </div>
+      <button class="btn-ghost" id="logoutBtn">Disconnect token</button>
+    </div>
+
+    <details style="margin-bottom: 1.5rem;">
+      <summary id="existingSummary">Existing projects</summary>
+      <div class="existing" id="existingList">Loading…</div>
+    </details>
+
+    <form id="projectForm" class="card">
+      <fieldset>
+        <legend>Details</legend>
+        <div class="field">
+          <label for="fTitle">Title</label>
+          <input type="text" id="fTitle" required placeholder="e.g. Some Song by Some Artist">
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="fCatSlug">Section</label>
+            <select id="fCatSlug">
+              <option value="music-video">Music Video</option>
+              <option value="narrative">Narrative</option>
+              <option value="documentary">Documentary</option>
+              <option value="commercial">Commercial</option>
+              <option value="social-media">Social Media</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fCategory">Category label (shown on site)</label>
+            <input type="text" id="fCategory" required placeholder="e.g. Music Video">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="fYear">Year</label>
+            <input type="number" id="fYear" required>
+          </div>
+          <div class="field">
+            <label for="fRole">Your role</label>
+            <input type="text" id="fRole" required placeholder="e.g. Director/Editor">
+          </div>
+        </div>
+        <div class="field">
+          <label for="fDesc">Description</label>
+          <textarea id="fDesc" required></textarea>
+        </div>
+        <div class="checkbox-row field">
+          <input type="checkbox" id="fFeatured" checked>
+          <label for="fFeatured">Show in homepage Work grid (only the first 6 featured projects appear there)</label>
+        </div>
+      </fieldset>
+
+      <div class="divider-lite"></div>
+
+      <fieldset>
+        <legend>Links</legend>
+        <div class="field">
+          <label for="fVideo">YouTube link (optional)</label>
+          <input type="url" id="fVideo" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="fLink">External link (optional)</label>
+            <input type="url" id="fLink" placeholder="https://...">
+          </div>
+          <div class="field">
+            <label for="fLinkLabel">Link label</label>
+            <input type="text" id="fLinkLabel" placeholder="e.g. Watch BTS →">
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="divider-lite"></div>
+
+      <fieldset>
+        <legend>Images</legend>
+        <div class="field">
+          <label for="fSlug">Folder name (used in the image URLs)</label>
+          <input type="text" id="fSlug" required>
+          <p class="hint">Auto-filled from the title. Change it if it clashes with an existing project.</p>
+        </div>
+        <div class="field">
+          <label for="fCover">Cover image</label>
+          <input type="file" id="fCover" accept="image/*" required>
+        </div>
+        <div class="field">
+          <label for="fGallery">Gallery images (optional, select multiple)</label>
+          <input type="file" id="fGallery" accept="image/*" multiple>
+        </div>
+      </fieldset>
+
+      <div class="divider-lite"></div>
+
+      <button type="submit" class="btn-primary" id="submitBtn">Publish project</button>
+      <div class="error" id="formError"></div>
+      <div class="log" id="log"></div>
+    </form>
+  </section>
+
+</div>
+
+<script>
+const OWNER = 'mushroom3666-del';
+const REPO = 'portfolio';
+const BRANCH = 'main';
+const API = 'https://api.github.com';
+
+const CAT_LABELS = {
+  'music-video': 'Music Video',
+  'narrative': 'Narrative',
+  'documentary': 'Documentary',
+  'commercial': 'Commercial',
+  'social-media': 'Social Media',
+};
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+async function sha256Hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function slugify(str) {
+  return str.toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// ── GATE: PASSPHRASE ──
+function initGate() {
+  const savedHash = localStorage.getItem('admin_pass_hash');
+  const unlocked = sessionStorage.getItem('admin_unlocked') === '1';
+  if (!savedHash) { show('screen-setup'); return; }
+  if (!unlocked) { show('screen-lock'); return; }
+  initTokenGate();
+}
+
+document.getElementById('setupPassBtn').addEventListener('click', async () => {
+  const p1 = document.getElementById('setupPass').value;
+  const p2 = document.getElementById('setupPassConfirm').value;
+  const err = document.getElementById('setupPassError');
+  err.textContent = '';
+  if (p1.length < 4) { err.textContent = 'Use at least 4 characters.'; return; }
+  if (p1 !== p2) { err.textContent = "Passphrases don't match."; return; }
+  localStorage.setItem('admin_pass_hash', await sha256Hex(p1));
+  sessionStorage.setItem('admin_unlocked', '1');
+  initTokenGate();
+});
+
+document.getElementById('lockBtn').addEventListener('click', async () => {
+  const val = document.getElementById('lockPass').value;
+  const err = document.getElementById('lockError');
+  const hash = await sha256Hex(val);
+  if (hash === localStorage.getItem('admin_pass_hash')) {
+    sessionStorage.setItem('admin_unlocked', '1');
+    err.textContent = '';
+    initTokenGate();
+  } else {
+    err.textContent = 'Incorrect passphrase.';
+  }
+});
+
+document.getElementById('forgetPassBtn').addEventListener('click', () => {
+  if (!confirm('This clears the saved passphrase and token on this device. Continue?')) return;
+  localStorage.removeItem('admin_pass_hash');
+  localStorage.removeItem('admin_gh_token');
+  sessionStorage.removeItem('admin_unlocked');
+  location.reload();
+});
+
+// ── GATE: TOKEN ──
+function initTokenGate() {
+  const token = localStorage.getItem('admin_gh_token');
+  if (!token) { show('screen-token'); return; }
+  connectWithToken(token, true);
+}
+
+document.getElementById('tokenBtn').addEventListener('click', async () => {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (!token) return;
+  connectWithToken(token, false);
+});
+
+async function connectWithToken(token, silent) {
+  const err = document.getElementById('tokenError');
+  const btn = document.getElementById('tokenBtn');
+  err.textContent = '';
+  if (!silent) { btn.disabled = true; btn.textContent = 'Connecting…'; }
+  try {
+    const res = await fetch(`${API}/repos/${OWNER}/${REPO}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+    });
+    if (!res.ok) throw new Error(res.status === 401 ? 'Invalid token.' : `GitHub error (${res.status}).`);
+    const data = await res.json();
+    if (!data.permissions || !data.permissions.push) throw new Error('This token does not have write access to the repository.');
+    localStorage.setItem('admin_gh_token', token);
+    document.getElementById('repoName').textContent = `${OWNER}/${REPO}`;
+    show('screen-app');
+    loadExisting(token);
+  } catch (e) {
+    if (silent) { localStorage.removeItem('admin_gh_token'); show('screen-token'); }
+    err.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Connect';
+  }
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('admin_gh_token');
+  location.reload();
+});
+
+// ── LOAD EXISTING PROJECTS (for reference / slug collisions) ──
+let existingSlugs = [];
+async function loadExisting(token) {
+  const box = document.getElementById('existingList');
+  try {
+    const file = await getFile(token, 'data/projects.js');
+    const code = decodeB64Utf8(file.content);
+    const projects = new Function(code + '\n;return projects;')();
+    existingSlugs = projects.map(p => (p.img || '').split('/')[1]).filter(Boolean);
+    document.getElementById('existingSummary').textContent = `Existing projects (${projects.length})`;
+    box.innerHTML = projects.map(p => `<div>${p.year} — ${p.title}</div>`).join('');
+  } catch (e) {
+    box.textContent = 'Could not load existing projects: ' + e.message;
+  }
+}
+
+// ── FORM AUTO-FILL ──
+const titleEl = document.getElementById('fTitle');
+const slugEl = document.getElementById('fSlug');
+const catSlugEl = document.getElementById('fCatSlug');
+const categoryEl = document.getElementById('fCategory');
+let slugTouched = false, categoryTouched = false;
+slugEl.addEventListener('input', () => slugTouched = true);
+categoryEl.addEventListener('input', () => categoryTouched = true);
+titleEl.addEventListener('input', () => { if (!slugTouched) slugEl.value = slugify(titleEl.value); });
+catSlugEl.addEventListener('change', () => { if (!categoryTouched) categoryEl.value = CAT_LABELS[catSlugEl.value]; });
+categoryEl.value = CAT_LABELS[catSlugEl.value];
+document.getElementById('fYear').value = new Date().getFullYear();
+
+function youtubeEmbed(url) {
+  if (!url) return null;
+  const m = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{6,})/);
+  return m ? `https://www.youtube.com/embed/${m[1]}` : url;
+}
+
+// ── GITHUB HELPERS ──
+function encodeB64Utf8(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function decodeB64Utf8(b64) {
+  return decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
+}
+
+async function getFile(token, path) {
+  const res = await fetch(`${API}/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`, {
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+  });
+  if (!res.ok) throw new Error(`Could not read ${path} (${res.status})`);
+  return res.json();
+}
+
+async function putFile(token, path, base64Content, message, sha) {
+  const body = { message, content: base64Content, branch: BRANCH };
+  if (sha) body.sha = sha;
+  const res = await fetch(`${API}/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`Failed to save ${path} (${res.status}): ${t.slice(0, 200)}`);
+  }
+  return res.json();
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function serializeProject(p) {
+  const lines = ['  {'];
+  lines.push(`    title: ${JSON.stringify(p.title)},`);
+  lines.push(`    category: ${JSON.stringify(p.category)},`);
+  lines.push(`    cat: ${JSON.stringify(p.cat)},`);
+  lines.push(`    year: ${p.year},`);
+  lines.push(`    role: ${JSON.stringify(p.role)},`);
+  lines.push(`    img: ${JSON.stringify(p.img)},`);
+  lines.push(`    desc: ${JSON.stringify(p.desc)},`);
+  lines.push(`    featured: ${p.featured},`);
+  lines.push(`    video: ${p.video ? JSON.stringify(p.video) : 'null'},`);
+  if (p.link) lines.push(`    link: ${JSON.stringify(p.link)},`);
+  if (p.link && p.linkLabel) lines.push(`    linkLabel: ${JSON.stringify(p.linkLabel)},`);
+  lines.push('    images: [');
+  p.images.forEach(img => lines.push(`      ${JSON.stringify(img)},`));
+  lines.push('    ],');
+  lines.push('  },');
+  return lines.join('\n');
+}
+
+// ── SUBMIT ──
+document.getElementById('projectForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const token = localStorage.getItem('admin_gh_token');
+  const submitBtn = document.getElementById('submitBtn');
+  const formError = document.getElementById('formError');
+  const log = document.getElementById('log');
+  formError.textContent = '';
+  log.textContent = '';
+  const logLine = (s) => { log.textContent += s + '\n'; log.scrollTop = log.scrollHeight; };
+
+  const slug = slugEl.value.trim();
+  if (!slug) { formError.textContent = 'Folder name is required.'; return; }
+  if (existingSlugs.includes(slug)) { formError.textContent = `"${slug}" is already used by another project — choose a different folder name.`; return; }
+
+  const cover = document.getElementById('fCover').files[0];
+  if (!cover) { formError.textContent = 'A cover image is required.'; return; }
+  const galleryFiles = Array.from(document.getElementById('fGallery').files);
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Publishing…';
+
+  try {
+    const coverExt = cover.name.split('.').pop().toLowerCase();
+    logLine(`Uploading cover image…`);
+    const coverB64 = await fileToBase64(cover);
+    await putFile(token, `images/${slug}/thumb.${coverExt}`, coverB64, `Add ${slug} cover image`);
+
+    const galleryPaths = [];
+    for (let i = 0; i < galleryFiles.length; i++) {
+      const f = galleryFiles[i];
+      const ext = f.name.split('.').pop().toLowerCase();
+      const num = String(i + 1).padStart(2, '0');
+      const path = `images/${slug}/${num}.${ext}`;
+      logLine(`Uploading gallery image ${i + 1} of ${galleryFiles.length}…`);
+      const b64 = await fileToBase64(f);
+      await putFile(token, path, b64, `Add ${slug} gallery image ${num}`);
+      galleryPaths.push(path);
+    }
+
+    const project = {
+      title: titleEl.value.trim(),
+      category: categoryEl.value.trim(),
+      cat: catSlugEl.value,
+      year: Number(document.getElementById('fYear').value),
+      role: document.getElementById('fRole').value.trim(),
+      img: `images/${slug}/thumb.${coverExt}`,
+      desc: document.getElementById('fDesc').value.trim(),
+      featured: document.getElementById('fFeatured').checked,
+      video: youtubeEmbed(document.getElementById('fVideo').value.trim()),
+      link: document.getElementById('fLink').value.trim() || null,
+      linkLabel: document.getElementById('fLinkLabel').value.trim() || null,
+      images: galleryPaths,
+    };
+
+    logLine('Updating project list…');
+    const file = await getFile(token, 'data/projects.js');
+    const code = decodeB64Utf8(file.content);
+    const marker = 'const projects = [\n';
+    const idx = code.indexOf(marker);
+    if (idx === -1) throw new Error('Could not find insertion point in data/projects.js');
+    const newCode = code.slice(0, idx + marker.length) + serializeProject(project) + '\n' + code.slice(idx + marker.length);
+    await putFile(token, 'data/projects.js', encodeB64Utf8(newCode), `Add project: ${project.title}`, file.sha);
+
+    logLine('Done!');
+    formError.innerHTML = '';
+    log.innerHTML += `<span class="success">Published. Your site will update in a minute or two.</span>\n`;
+    document.getElementById('projectForm').reset();
+    slugTouched = false; categoryTouched = false;
+    categoryEl.value = CAT_LABELS[catSlugEl.value];
+    document.getElementById('fYear').value = new Date().getFullYear();
+    document.getElementById('fFeatured').checked = true;
+    existingSlugs.push(slug);
+  } catch (err) {
+    formError.textContent = err.message;
+    logLine('Stopped: ' + err.message);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Publish project';
+  }
+});
+
+initGate();
+</script>
+</body>
+</html>
